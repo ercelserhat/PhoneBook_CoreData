@@ -73,7 +73,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let silAction = UIContextualAction(style: .destructive, title: "Sil") { contextualaction, view, boolValue in
-        
+            let kisi = self.kisilerListe[indexPath.row]
+            self.context.delete(kisi)
+            appDelegate.saveContext()
+            self.tumKisileriAl()
+            self.kisilerTableView.reloadData()
         }
         let guncelleAction = UIContextualAction(style: .normal, title: "Güncelle") { contextualaction, view, boolValue in
             self.performSegue(withIdentifier: "toKisiGuncelle", sender: indexPath.row)
