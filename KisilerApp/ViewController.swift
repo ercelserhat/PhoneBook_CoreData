@@ -26,7 +26,11 @@ class ViewController: UIViewController {
         kisilerTableView.dataSource = self
         kisilerTableView.delegate = self
         searchBar.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         tumKisileriAl()
+        kisilerTableView.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
