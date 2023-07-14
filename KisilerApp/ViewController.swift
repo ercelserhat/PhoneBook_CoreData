@@ -34,11 +34,15 @@ class ViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let indeks = sender as? Int
+        
         if segue.identifier == "toKisiDetay"{
-            
+            let destinationVC = segue.destination as! KisiDetayViewController
+            destinationVC.kisi = kisilerListe[indeks!]
         }
         if segue.identifier == "toKisiGuncelle"{
-            
+            let destinationVC = segue.destination as! KisiGuncelleViewController
+            destinationVC.kisi = kisilerListe[indeks!]
         }
     }
     
