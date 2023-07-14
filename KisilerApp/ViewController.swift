@@ -20,6 +20,9 @@ class ViewController: UIViewController {
     
     var kisilerListe = [Kisiler]()
     
+    var aramaYapiliyormu = false
+    var aramaKelimesi: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,7 +32,11 @@ class ViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        tumKisileriAl()
+        if aramaYapiliyormu{
+            aramaYap(kisiAdi: aramaKelimesi!)
+        }else{
+            tumKisileriAl()
+        }
         kisilerTableView.reloadData()
     }
     
@@ -49,6 +56,16 @@ class ViewController: UIViewController {
     func tumKisileriAl(){
         do{
             kisilerListe = try context.fetch(Kisiler.fetchRequest())
+        }catch{
+            print(error)
+        }
+    }
+    
+    func aramaYap(kisiAdi: String){
+        let fetchRequest: NSFetchRequest<Kisiler> = Kisiler.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "kisi_ad CONTAINS %@", kisiAdi)
+        do{
+            kisilerListe = try context.fetch(fetchRequest)
         }catch{
             print(error)
         }
@@ -80,7 +97,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
             let kisi = self.kisilerListe[indexPath.row]
             self.context.delete(kisi)
             appDelegate.saveContext()
-            self.tumKisileriAl()
+            if self.aramaYapiliyormu{
+                self.aramaYap(kisiAdi: self.aramaKelimesi!)
+            }else{
+                self.tumKisileriAl()
+            }
             self.kisilerTableView.reloadData()
         }
         let guncelleAction = UIContextualAction(style: .normal, title: "Güncelle") { contextualaction, view, boolValue in
@@ -93,6 +114,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
 extension ViewController: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print("Arama sonuç: \(searchText)")
+        
+        aramaKelimesi = searchText
+        if searchText == ""{
+            aramaYapiliyormu = false
+            tumKisileriAl()
+        }else{
+            aramaYapiliyormu = true
+            aramaYap(kisiAdi: aramaKelimesi!)
+        }
+        kisilerTableView.reloadData()
     }
 }
 
