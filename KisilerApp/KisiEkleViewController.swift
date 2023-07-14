@@ -9,6 +9,8 @@ import UIKit
 
 class KisiEkleViewController: UIViewController {
     
+    let context = appDelegate.persistentContainer.viewContext
+    
     @IBOutlet weak var kisiAdiTextField: UITextField!
     @IBOutlet weak var kisiTelTextField: UITextField!
     
@@ -17,5 +19,11 @@ class KisiEkleViewController: UIViewController {
     }
     
     @IBAction func kisiEkleButton(_ sender: Any) {
+        if let ad = kisiAdiTextField.text, let tel = kisiTelTextField.text{
+            let kisi = Kisiler(context: context)
+            kisi.kisi_ad = ad
+            kisi.kisi_tel = tel
+            appDelegate.saveContext()
+        }
     }
 }
